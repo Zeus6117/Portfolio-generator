@@ -1,12 +1,13 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 
 const promptUser = () => {
-
-return inquirer.prompt([
+  return inquirer.prompt([
     {
       type: 'input',
       name: 'name',
-      message: 'What is your name?(Required)',
+      message: 'What is your name? (Required)',
       validate: nameInput => {
         if (nameInput) {
           return true;
@@ -19,12 +20,12 @@ return inquirer.prompt([
     {
       type: 'input',
       name: 'github',
-      message: 'Enter your Github Username(Required)',
-      validate: nameInput => {
-        if (nameInput) {
+      message: 'Enter your GitHub Username (Required)',
+      validate: githubInput => {
+        if (githubInput) {
           return true;
         } else {
-          console.log('Please enter your Github username!');
+          console.log('Please enter your GitHub username!');
           return false;
         }
       }
@@ -32,20 +33,14 @@ return inquirer.prompt([
     {
       type: 'confirm',
       name: 'confirmAbout',
-      message: 'Would you like to enter some information about yourself for an "About" sections?',
+      message: 'Would you like to enter some information about yourself for an "About" section?',
       default: true
     },
     {
       type: 'input',
       name: 'about',
       message: 'Provide some information about yourself:',
-      when: ({confirmAbout}) => {
-        if (confirmAbout) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+      when: ({ confirmAbout }) => confirmAbout
     }
   ]);
 };
@@ -130,14 +125,14 @@ const promptProject = portfolioData => {
 };
 
 promptUser()
-.then(promptProject)
-.then(portfolioData => {
-  console.log(portfolioData)
-});
+  .then(promptProject)
+  .then(portfolioData => {
+     const pageHTML = generatePage();
 
-//const fs = require('fs');
-
-//const generatePage = require('./src/page-template.js');
+    // fs.writeFile('./index.html', pageHTML, err => {
+    //   if (err) throw new Error(err);
+    // });
+  });
 
 //const pageHTML = generatePage(name, github)
 /*we're using inquirer to capture date so we no longer need this to capture the date
